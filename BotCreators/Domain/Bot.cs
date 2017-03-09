@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BotCreators.Domain
 {
@@ -10,25 +7,24 @@ namespace BotCreators.Domain
     {
         public Dictionary<string, Response> Responses = new Dictionary<string, Response>();
 
-        public Response RetrievalResponse(string text, string chatId)
+        public Response RetrievalResponse(string text, long chatId)
         {
-            if (text == null || !Responses.ContainsKey(text))
+            if (text == null)
             {
-                var response = new Response()
-                {
-                    Text = "I don't know that i should answer"
-                };
-
-                return response;
+                throw new ArgumentException("Parameters can't be null");
             }
 
-            return Responses[text];
+            Response response = null;
+
+            if (response == null)
+            {
+                return new Response
+                {
+                    Text = "I don't know that i must answer"
+                };
+            }
+
+            return response;
         }
-
-    }
-
-    public class Response
-    {
-        public string Text { get; set; }
     }
 }

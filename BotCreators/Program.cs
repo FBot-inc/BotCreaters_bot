@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Linq;
+using BotCreators.Domain;
 using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace BotCreators
 {
-    public class RequestResult
-    {
-        public string ChatId { get; set; }
-        public string Text { get; set; }
-    }
-
     public class Program
     {
         public static void Main(string[] args)
         {
-            
 
             var api = new TelegramBotClient("261790631:AAGbJaS4tHzPjwNATCnXSp3VI9y7LCX7n1Q");
-            
+
+            var bot = new Bot();
+
+
             var me = api.GetMeAsync();
 
             Console.WriteLine("Complited the connection to the bot");
@@ -36,17 +31,24 @@ namespace BotCreators
                 var updates = api.GetUpdatesAsync(offset, 100, 100);
 
                 offset = updates.Result.Max(p => p.Id) + 1;
-                
+
                 foreach (var update in updates.Result)
                 {
-                    Console.WriteLine("There is a new message from " + update.Message.Chat.Id + " chat: " + update.Message.Text);
+                    Console.WriteLine("There is a new message from " + update.Message.Chat.Id + " chat: " +
+                                      update.Message.Text);
 
-                    
-                    var replyKeybord = new ReplyKeyboardMarkup(new[] {new [] {new KeyboardButton("123")}, new[] {new KeyboardButton("231")}  }, true, true);
+                    var response = bot.RetrievalResponse(update.Message.Text, update.Message.Chat.Id);
 
-                    api.SendTextMessageAsync(update.Message.Chat.Id, update.Message.Text, false, false, 0, replyKeybord);
+                    Console.WriteLine("Response: " + response.Text);
+
+                    api.SendTextMessageAsync(update.Message.Chat.Id, response.Text);
                 }
             }
         }
     }
 }
+/*var replyKeybord =
+    new ReplyKeyboardMarkup(
+        new[] {new[] {new KeyboardButton("123")}, new[] {new KeyboardButton("231")}}, true, true);*/
+
+    /*, false, false, 0, replyKeybord*/
