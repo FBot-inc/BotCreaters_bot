@@ -1,4 +1,5 @@
-﻿using BotCreators.BotModule.Inputs;
+﻿using System;
+using BotCreators.BotModule.Inputs;
 using NUnit.Framework;
 
 namespace BotCreaters.Test.test.BotModule.Inputs
@@ -26,6 +27,40 @@ namespace BotCreaters.Test.test.BotModule.Inputs
             Assert.IsFalse(result);
         }
 
-       
+        [Test]
+        public void CreateInputWithNullValue()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var input = new Input(null);
+            });
+        }
+
+        [Test]
+        public void EqualsWithOtherClass()
+        {
+            var input = new Input("asdf");
+
+            Assert.AreNotEqual(input, "asdf");
+        }
+
+        [Test]
+        public void EqualsWithRightObject()
+        {
+            var input1 = new Input("asdf");
+            var input2 = new Input("asdf");
+
+            Assert.AreEqual(input2, input1);
+        }
+
+        [Test]
+        public void EqualsWithWrongData()
+        {
+            var input1 = new Input("asdf");
+            var input2 = new Input("asdf114234");
+
+
+            Assert.AreNotEqual(input1, input2);
+        }
     }
 }

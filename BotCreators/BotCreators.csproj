@@ -64,6 +64,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\BotModule\Bot.cs" />
+    <Compile Include="src\BotModule\Flows\Flow.cs" />
     <Compile Include="src\BotModule\Inputs\IInput.cs" />
     <Compile Include="src\BotModule\Inputs\Input.cs" />
   </ItemGroup>
@@ -72,7 +73,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\BotModule\Flows\" />
     <Folder Include="src\BotModule\Responses\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
