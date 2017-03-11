@@ -10,7 +10,7 @@ namespace BotCreators.BotModule.Responses
         {
             if (text == null)
             {
-                throw new ArgumentException("Text argument cannot be null");
+                throw new ArgumentException("Pattern argument cannot be null");
             }
 
             Text = text;

@@ -37,7 +37,7 @@ namespace BotCreaters.Test.test.BotModule.Flows
 
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(inputFlowNode, responseFlowNode.Back);
+                Assert.AreEqual(inputFlowNode, responseFlowNode.PreviousNode);
                 Assert.AreEqual(response, responseFlowNode.Response);
             });
         }

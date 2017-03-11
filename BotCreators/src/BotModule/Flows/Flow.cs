@@ -32,6 +32,8 @@ namespace BotCreators.BotModule.Flows
             return _currentNodesOfUser[chatId].Input.IsBelong(message)
                 ? _currentNodesOfUser[chatId].Response
                 : new Response("I do not know answer");
+
+            //todo Необходимо добавить изменение текущего узла
         }
 
         public InputFlowNode Start()

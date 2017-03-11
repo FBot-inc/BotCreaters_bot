@@ -1,15 +1,18 @@
-﻿using BotCreators.BotModule.Responses;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BotCreators.BotModule.Responses;
 
 namespace BotCreators.BotModule.Flows
 {
     public class ResponseFlowNode
     {
-        public InputFlowNode Back { get; set; }
+        public InputFlowNode PreviousNode { get; set; }
+        
+        public Response Response { get; set; }
 
         public bool IsEnd { get; private set; }
 
-
-        public Response Response { get; set; }
+        public List<InputFlowNode> NextInputNodes = new List<InputFlowNode>();
 
         public ResponseFlowNode(Response response)
         {
@@ -19,12 +22,24 @@ namespace BotCreators.BotModule.Flows
         public ResponseFlowNode(Response response, InputFlowNode prevInputFlowNode)
         {
             Response = response;
-            Back = prevInputFlowNode;
+            PreviousNode = prevInputFlowNode;
         }
 
         public void End()
         {
             IsEnd = true;
         }
+
+
+        //Метод пока не протестирован 
+        /*public InputFlowNode Return()
+        {
+            if (NextInputNodes.Any())
+            {
+                End();
+            }
+
+            return PreviousNode;
+        }*/
     }
 }

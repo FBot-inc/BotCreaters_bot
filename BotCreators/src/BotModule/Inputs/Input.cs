@@ -4,8 +4,8 @@ namespace BotCreators.BotModule.Inputs
 {
     public class Input : IInput
     {
-        private readonly string _pattern;
-        
+        public string Pattern { get; }
+
         public Input(string pattern)
         {
             if (pattern == null)
@@ -13,12 +13,12 @@ namespace BotCreators.BotModule.Inputs
                 throw new ArgumentException("Argument pattern cannot be null");
             }
 
-            _pattern = pattern;
+            Pattern = pattern;
         }
 
         public bool IsBelong(string message)
         {
-            return _pattern != null && _pattern.Equals(message);
+            return Pattern != null && Pattern.Equals(message);
         }
 
         public override bool Equals(object obj)
@@ -30,12 +30,12 @@ namespace BotCreators.BotModule.Inputs
 
         public override int GetHashCode()
         {
-            return _pattern?.GetHashCode() ?? 0;
+            return Pattern?.GetHashCode() ?? 0;
         }
 
         public bool Equals(Input input)
         {
-            return _pattern.Equals(input._pattern);
+            return Pattern.Equals(input.Pattern);
         }
     }
 }
