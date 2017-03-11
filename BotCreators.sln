@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotCreators", "BotCreators\BotCreators.csproj", "{58CA7C29-9019-4947-995C-4135995CB5F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotCreaters.Test", "BotCreaters.Test\BotCreaters.Test.csproj", "{0F17D76D-134B-42E4-A2AC-5404581B92A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{58CA7C29-9019-4947-995C-4135995CB5F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58CA7C29-9019-4947-995C-4135995CB5F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58CA7C29-9019-4947-995C-4135995CB5F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F17D76D-134B-42E4-A2AC-5404581B92A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F17D76D-134B-42E4-A2AC-5404581B92A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F17D76D-134B-42E4-A2AC-5404581B92A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F17D76D-134B-42E4-A2AC-5404581B92A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

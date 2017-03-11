@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using BotCreators.Domain;
+using BotCreators.Domain.Entities;
 using Telegram.Bot;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace BotCreators
 {
@@ -9,8 +13,7 @@ namespace BotCreators
     {
         public static void Main(string[] args)
         {
-
-            var api = new TelegramBotClient("261790631:AAGbJaS4tHzPjwNATCnXSp3VI9y7LCX7n1Q");
+            var api = new TelegramBotClient("350817703:AAHSOXYrfX_uWyz0qEWCkzng1YYNZu-mvR0");
 
             var bot = new Bot();
 
@@ -30,25 +33,25 @@ namespace BotCreators
             {
                 var updates = api.GetUpdatesAsync(offset, 100, 100);
 
-                offset = updates.Result.Max(p => p.Id) + 1;
+                if (updates.Result.Any())
+                {
+                    offset = updates.Result.Max(p => p.Id) + 1;
+                }
 
                 foreach (var update in updates.Result)
                 {
                     Console.WriteLine("There is a new message from " + update.Message.Chat.Id + " chat: " +
                                       update.Message.Text);
 
-                    var response = bot.RetrievalResponse(update.Message.Text, update.Message.Chat.Id);
-
-                    Console.WriteLine("Response: " + response.Text);
-
-                    api.SendTextMessageAsync(update.Message.Chat.Id, response.Text);
+                    var conversation = bot.RetrievalResponse(update.Message.Text, update.Message.Chat.Id);
+                    
+                    /*var keybord =
+                        new ReplyKeyboardMarkup(
+                            conversation?.Buttons?.Select(p => new KeyboardButton(p.Text)).ToArray(), true, true);
+                    */
+                    api.SendTextMessageAsync(update.Message.Chat.Id, conversation?.Response);
                 }
             }
         }
     }
 }
-/*var replyKeybord =
-    new ReplyKeyboardMarkup(
-        new[] {new[] {new KeyboardButton("123")}, new[] {new KeyboardButton("231")}}, true, true);*/
-
-    /*, false, false, 0, replyKeybord*/

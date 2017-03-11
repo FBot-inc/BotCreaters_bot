@@ -61,16 +61,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Bot.cs" />
-    <Compile Include="Domain\Response.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\BotModule\Bot.cs" />
+    <Compile Include="src\BotModule\Inputs\IInput.cs" />
+    <Compile Include="src\BotModule\Inputs\Input.cs" />
+    <Compile Include="TelegramAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="src\BotModule\Flows\" />
+    <Folder Include="src\BotModule\Responses\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
