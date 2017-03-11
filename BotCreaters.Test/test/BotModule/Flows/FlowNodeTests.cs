@@ -1,5 +1,6 @@
 ﻿using BotCreators.BotModule.Flows;
 using BotCreators.BotModule.Inputs;
+using BotCreators.BotModule.Responses;
 using NUnit.Framework;
 
 namespace BotCreaters.Test.test.BotModule.Flows
@@ -11,16 +12,34 @@ namespace BotCreaters.Test.test.BotModule.Flows
         public void CreateSimpleInputFlowNodeAndCheckInputFieldValue()
         {
             var input = new Input("hello");
-
             var inputFlowNode = new InputFlowNode(input);
 
             Assert.AreEqual(input, inputFlowNode.Input);
         }
 
         [Test]
+        public void CreateSimpleResponseFlowNodeAndCheckTextFieldValue()
+        {
+            var response = new Response("hi");
+            var responseFlowNode = new FlowResponseNode(response);
+
+            Assert.AreEqual(response, responseFlowNode.Response);
+        }
+
+        [Test]
         public void CreateNewResponseForInputNodeAndCheckIt()
         {
-            //todo Отложил создание теста до добавления класса респонс
+            var input = new Input("hello");
+            var inputFlowNode = new InputFlowNode(input);
+            var response = new Response("hello it's me");
+
+            var responseFlowNode = inputFlowNode.AddResponse(response);
+
+            Assert.Multiple(() =>
+            {
+                Assert.AreEqual(inputFlowNode, responseFlowNode.Back);
+                Assert.AreEqual(response, responseFlowNode.Response);
+            });
         }
     }
 }
