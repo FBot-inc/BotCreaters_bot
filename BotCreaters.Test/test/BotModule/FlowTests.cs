@@ -14,7 +14,7 @@ namespace BotCreaters.Test.test.BotModule
         [Test]
         public void CreateSimpleFlowWithoutData()
         {
-            var flow = new Flow();
+            //var flow = new Flow();
         }
     }
 }

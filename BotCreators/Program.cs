@@ -1,19 +1,10 @@
-﻿using System;
-using System.Data.Entity;
-using System.Linq;
-using BotCreators.Domain;
-using BotCreators.Domain.Entities;
-using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
-
-namespace BotCreators
+﻿namespace BotCreators
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            var api = new TelegramBotClient("350817703:AAHSOXYrfX_uWyz0qEWCkzng1YYNZu-mvR0");
+            /*var api = new TelegramBotClient("350817703:AAHSOXYrfX_uWyz0qEWCkzng1YYNZu-mvR0");
 
             var bot = new Bot();
 
@@ -49,9 +40,9 @@ namespace BotCreators
                         new ReplyKeyboardMarkup(
                             conversation?.Buttons?.Select(p => new KeyboardButton(p.Text)).ToArray(), true, true);
                     */
-                    api.SendTextMessageAsync(update.Message.Chat.Id, conversation?.Response);
-                }
-            }
+                    //api.SendTextMessageAsync(update.Message.Chat.Id, conversation?.Response);
+                /*}
+            }*/
         }
     }
 }
