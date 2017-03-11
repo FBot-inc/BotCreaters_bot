@@ -55,6 +55,7 @@
     <Compile Include="test\BotModule\Flows\FlowNodeTests.cs" />
     <Compile Include="test\BotModule\Flows\FlowTests.cs" />
     <Compile Include="test\BotModule\Inputs\InputTests.cs" />
+    <Compile Include="test\BotModule\Responses\ResponseTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

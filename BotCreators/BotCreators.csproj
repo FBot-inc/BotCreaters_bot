@@ -67,14 +67,14 @@
     <Compile Include="src\BotModule\Flows\Flow.cs" />
     <Compile Include="src\BotModule\Inputs\IInput.cs" />
     <Compile Include="src\BotModule\Inputs\Input.cs" />
+    <Compile Include="src\BotModule\Responses\IResponse.cs" />
+    <Compile Include="src\BotModule\Responses\Response.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\BotModule\Responses\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
