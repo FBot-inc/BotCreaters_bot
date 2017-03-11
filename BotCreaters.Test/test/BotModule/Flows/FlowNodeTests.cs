@@ -21,7 +21,7 @@ namespace BotCreaters.Test.test.BotModule.Flows
         public void CreateSimpleResponseFlowNodeAndCheckTextFieldValue()
         {
             var response = new Response("hi");
-            var responseFlowNode = new FlowResponseNode(response);
+            var responseFlowNode = new ResponseFlowNode(response);
 
             Assert.AreEqual(response, responseFlowNode.Response);
         }

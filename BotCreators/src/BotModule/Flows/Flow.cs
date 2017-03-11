@@ -1,54 +1,42 @@
-﻿using BotCreators.BotModule.Inputs;
+﻿using System;
+using System.Collections.Generic;
+using BotCreators.BotModule.Inputs;
 using BotCreators.BotModule.Responses;
+using Telegram.Bot.Types;
 
 namespace BotCreators.BotModule.Flows
 {
     public class Flow
     {
-        private string _input;
+        public InputFlowNode Head { get; set; }
 
-        public Flow(string input)
+        private Dictionary<long, InputFlowNode> _currentNodesOfUser = new Dictionary<long, InputFlowNode>();
+
+        public Flow(IInput input)
         {
-            _input = input;
+            if (input == null)
+            {
+                throw new ArgumentException("Input cannot be null");
+            }
+
+            Head = new InputFlowNode(input);
         }
 
-        public Input Head { get; set; }
-    }
-
-    public class InputFlowNode
-    {
-        public IInput Input { get; set; }
-
-        private FlowResponseNode _nextResponseNode;
-
-        public InputFlowNode(IInput input)
+        public Response Conversation(string message, long chatId)
         {
-            Input = input;
+            if (!_currentNodesOfUser.ContainsKey(chatId))
+            {
+                _currentNodesOfUser.Add(chatId, Head);
+            }
+
+            return _currentNodesOfUser[chatId].Input.IsBelong(message)
+                ? _currentNodesOfUser[chatId].Response
+                : new Response("I do not know answer");
         }
 
-        public FlowResponseNode AddResponse(Response response)
+        public InputFlowNode Start()
         {
-            _nextResponseNode = new FlowResponseNode(response, this);
-
-            return _nextResponseNode;
-        }
-    }
-
-    public class FlowResponseNode
-    {
-        public InputFlowNode Back { get; set; }
-
-        public Response Response { get; set; }
-
-        public FlowResponseNode(Response response)
-        {
-            Response = response;
-        }
-
-        public FlowResponseNode(Response response, InputFlowNode prevInputFlowNode)
-        {
-            Response = response;
-            Back = prevInputFlowNode;
+            return Head;
         }
     }
 }
