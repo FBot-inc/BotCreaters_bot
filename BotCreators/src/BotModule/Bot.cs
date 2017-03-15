@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BotCreators.BotModule.Flows;
 using BotCreators.BotModule.Inputs;
+using BotCreators.DataSource;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -10,30 +12,54 @@ namespace BotCreators.BotModule
     public class Bot
     {
         public List<Flow> Flows { get; set; } = new List<Flow>();
-        public string StartMessage = "Main menu";
+
+
+        //вводы при которых показывается первый экран
+        public List<Input> StartInputs = new List<Input>
+        {
+            new Input("/start")
+        };
 
         public Bot()
         {
-            
+            try
+            {
+                Flows.Add(FlowSource.GetFlowById("flow_about_bot"));
+                Flows.Add(FlowSource.GetFlowById("flow_get_action"));
+            }
+            catch (TypeInitializationException e)
+            {
+                Console.WriteLine(e.InnerException);
+            }
         }
 
         public TelegramResponse Conversation(string message, long chatId)
         {
-            if (message == "/start")
+            if (StartInputs.Any(p => p.IsBelong(message)))
             {
-                var telegramResponse = new TelegramResponse
+                var buttonsList = Flows.Select(flow => flow.StartEvent()).OfType<NewMessageEvent>().Select(startEvent => startEvent.GeneralStartInput).ToList();
+
+                var keybordButtons = new KeyboardButton[buttonsList.Count][];
+
+                for (var i = 0; i < keybordButtons.Length; i++)
                 {
-                    Text = StartMessage,
-                    KeyboardButtons = new KeyboardButton[Flows.Count][]
-                };
-                
-                for (var i = 0; i < Flows.Count; i++)
-                {
-                    //todo надо будте исправить это место asdf
-                    telegramResponse.KeyboardButtons[i] = new KeyboardButton[] {(Flows[i].Head.Input as Input)?.Pattern ?? "asdf"};
+                    keybordButtons[i] = new []
+                    {
+                        new KeyboardButton(buttonsList[i])
+                    };
                 }
 
-                return telegramResponse;
+                //todo добавить добавление кнопок только с доступными правами
+                //todo добавление стратового текста в ответ с условием первый раз пользователь или нет
+
+
+                var response = new TelegramResponse
+                {
+                    Text = "hello",
+                    KeyboardButtons = keybordButtons
+                };
+
+                return response;
             }
 
 
@@ -48,6 +74,6 @@ namespace BotCreators.BotModule
     public class TelegramResponse
     {
         public string Text { get; set; }
-        public KeyboardButton[][] KeyboardButtons { get; set; }
+        public KeyboardButton[][] KeyboardButtons { get; set; } = new KeyboardButton[0][];
     }
 }

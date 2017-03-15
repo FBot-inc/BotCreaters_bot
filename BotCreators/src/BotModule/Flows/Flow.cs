@@ -6,39 +6,71 @@ using Telegram.Bot.Types;
 
 namespace BotCreators.BotModule.Flows
 {
+    /*
+     * Представлят собой логические потоки в чат боте.
+     * Могут начинаться с различных действий например время или новое сообщение
+     */
     public class Flow
     {
-        public InputFlowNode Head { get; set; }
+        public string Id { get; set; }
 
-        private Dictionary<long, InputFlowNode> _currentNodesOfUser = new Dictionary<long, InputFlowNode>();
+        public Event StartEvent() => InnerChains[0]?.StartEvent ?? new EmptyEvent();
 
-        public Flow(IInput input)
+        public List<InnerChain> InnerChains { get; set; }
+    }
+
+    /*
+     * Класс предстовляет собой внутренную цепочки потока
+     * Данные цепочки реагируют только на одно событие и на этом их жизнь прекращается
+     * В то время как поток может хранить несколько подряд идущих входных событий
+     */
+    public class InnerChain
+    {
+        public string Id { get; set; }
+        public Event StartEvent { get; set; }
+
+        public List<Action> Action { get; set; }
+
+        public List<Response> Responses { get; set; }
+    }
+
+    public class Event
+    {
+        
+    }
+
+
+    /*
+     * Класс событие новое сообщение.
+     * Сравнивает событие с произошедшим и если все сходиться дает доступ к потоку
+     */
+    public class NewMessageEvent : Event
+    {
+        public string GeneralStartInput { get; set; }
+        public Input Input { get; set; }
+
+
+        public bool Validate(string message)
         {
-            if (input == null)
+            if (message == null)
             {
-                throw new ArgumentException("Input cannot be null");
+                return false;
             }
 
-            Head = new InputFlowNode(input);
+            return Input != null && Input.IsBelong(message);
         }
+    }
 
-        public Response Conversation(string message, long chatId)
-        {
-            if (!_currentNodesOfUser.ContainsKey(chatId))
-            {
-                _currentNodesOfUser.Add(chatId, Head);
-            }
+    public class TimeEvent : Event
+    {
+        
+    }
 
-            return _currentNodesOfUser[chatId].Input.IsBelong(message)
-                ? _currentNodesOfUser[chatId].Response
-                : new Response("I do not know answer");
-
-            //todo Необходимо добавить изменение текущего узла
-        }
-
-        public InputFlowNode Start()
-        {
-            return Head;
-        }
+    /*
+     * Класс заглушка для событий когда, например, внутренних цепей еще нет и не откуда брать реальное событие можно взять это
+     */
+    public class EmptyEvent : Event
+    {
+        
     }
 }

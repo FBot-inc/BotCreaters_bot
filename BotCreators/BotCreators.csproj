@@ -71,6 +71,8 @@
     <Compile Include="src\BotModule\Inputs\Input.cs" />
     <Compile Include="src\BotModule\Responses\IResponse.cs" />
     <Compile Include="src\BotModule\Responses\Response.cs" />
+    <Compile Include="src\DataSource\DataContext.cs" />
+    <Compile Include="src\DataSource\FlowSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

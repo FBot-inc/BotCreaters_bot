@@ -15,25 +15,8 @@ namespace BotCreators
         public static void Main(string[] args)
         {
             var api = new TelegramBotClient("350817703:AAHSOXYrfX_uWyz0qEWCkzng1YYNZu-mvR0");
-
-            //todo вынести в отдельный класс
-            const string botStartMessage = "Чем я могу вам помочь";
-
-            var input = new Input("Получить консультацию");
-            var flow = new Flow(input);
-
-            flow.Start()
-                .AddResponse(new Response("Отлично! Это как раз то в чем я могу вам помочь."))
-                .End();
-
-            var bot = new Bot
-            {
-                StartMessage = botStartMessage,
-                Flows = new List<Flow>
-                {
-                    flow
-                }
-            };
+            
+            var bot = new Bot();
 
             var me = api.GetMeAsync();
 
@@ -60,9 +43,13 @@ namespace BotCreators
 
                     var response = bot.Conversation(update.Message.Text, update.Message.Chat.Id);
 
-                    //todo сделать учет того есть ли клавиатура
+                    var keybord = new ReplyKeyboardMarkup(response.KeyboardButtons)
+                    {
+                        ResizeKeyboard = true,
+                        OneTimeKeyboard = true
+                    };
 
-                    api.SendTextMessageAsync(update.Message.Chat.Id, response?.Text, false, false, 0, new ReplyKeyboardMarkup(response?.KeyboardButtons));
+                    api.SendTextMessageAsync(update.Message.Chat.Id, response?.Text, false, false, 0, keybord);
                 }
             }
         }

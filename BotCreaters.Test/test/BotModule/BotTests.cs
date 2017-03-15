@@ -18,6 +18,7 @@ namespace BotCreaters.Test.test.BotModule
         public void ConversationWithStartCommand()
         {
             const string inputMessage = "/start";
+            const long chatId = 1234L;
             const string botStartMessage = "Чем я могу вам помочь";
 
             var input = new Input("Получить консультацию");
@@ -36,14 +37,19 @@ namespace BotCreaters.Test.test.BotModule
                 }
             };
 
-            var result = bot.Conversation(inputMessage, 1234L);
+            var result = bot.Conversation(inputMessage, chatId);
+
+            var temp = (from buttons in result.KeyboardButtons from button in buttons select button.Text).ToList();
+
+            var excepted = new List<string>
+            {
+                "Получить консультацию"
+            };
 
             Assert.Multiple(() =>
             {
                 Assert.AreEqual(botStartMessage, result.Text);
-                Assert.AreEqual(1, result.KeyboardButtons.Length);
-                Assert.AreEqual(1, result.KeyboardButtons[0].Length);
-                Assert.AreEqual("Получить консультацию", result.KeyboardButtons[0][0].Text);
+                CollectionAssert.AreEqual(excepted, temp);
             });
         }
     }
