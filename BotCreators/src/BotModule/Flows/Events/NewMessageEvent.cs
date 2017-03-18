@@ -8,10 +8,19 @@ namespace BotCreators.BotModule.Flows.Events
          */
     public class NewMessageEvent : Event
     {
-        public string Title => Input.Pattern;
+        public bool IsDisplay { get; set; }
 
-        public Input Input { get; set; }
+        public string Title
+        {
+            get
+            {
+                var input = Input as SimpleInput;
 
+                return input?.Pattern;
+            }
+        }
+
+        public IInput Input { get; set; }
 
         public bool Validate(string message)
         {

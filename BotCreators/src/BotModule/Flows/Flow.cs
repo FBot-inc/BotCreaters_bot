@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BotCreators.BotModule.Flows.Events;
+using BotCreators.BotModule.Flows.Inputs;
 using Telegram.Bot.Types;
 
 namespace BotCreators.BotModule.Flows
@@ -13,7 +14,10 @@ namespace BotCreators.BotModule.Flows
     {
         public string Id { get; private set; }
         public Event StartEvent => Head?.Current?.StartEvent;
-        public FlowNode Head;
+
+        public FlowNode Head { get; set; }
+
+        public List<FlowNode> Nodes { get; } = new List<FlowNode>();
 
         public Flow(string id)
         {

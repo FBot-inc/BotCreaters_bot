@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BotCreators.BotModule.Flows;
 using BotCreators.BotModule.Flows.Events;
 using BotCreators.BotModule.Flows.Inputs;
-using BotCreators.DataSource;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace BotCreators.BotModule
 {
@@ -15,8 +12,8 @@ namespace BotCreators.BotModule
         public string BotId { get; private set; }
 
         public List<Flow> Flows { get; } = new List<Flow>();
-        public List<Input> StartInputs { get; } = new List<Input>();
-        
+        public List<SimpleInput> StartInputs { get; } = new List<SimpleInput>();
+
         public Bot(string botId)
         {
             BotId = botId;
@@ -24,39 +21,55 @@ namespace BotCreators.BotModule
 
         public TelegramResponse Conversation(string message, long chatId)
         {
-            if (StartInputs.Any(p => p.IsBelong(message)))
+            var response = new TelegramResponse();
+
+            if (IsStartMessage(message))
             {
-                var buttonsList = Flows.Select(flow => flow.StartEvent).OfType<NewMessageEvent>().Select(startEvent => startEvent.Title).ToList();
+                var flowTitles = FetchTitleFromDisplayFlow();
 
-                var keybordButtons = new KeyboardButton[buttonsList.Count][];
-
-                for (var i = 0; i < keybordButtons.Length; i++)
-                {
-                    keybordButtons[i] = new []
-                    {
-                        new KeyboardButton(buttonsList[i])
-                    };
-                }
-
-                //todo добавить добавление кнопок только с доступными правами
-                //todo добавление стратового текста в ответ с условием первый раз пользователь или нет
-
-
-                var response = new TelegramResponse
-                {
-                    Text = "hello",
-                    KeyboardButtons = keybordButtons
-                };
-
-                return response;
+                response.KeyboardButtons = ConverTitleListToKeybordsButton(flowTitles);
             }
 
+            return response;
+        }
 
-            //todo заглушка необходимо перписать
-            return new TelegramResponse
+        private bool IsStartMessage(string message)
+        {
+            return StartInputs.Any(p => p.IsBelong(message));
+        }
+
+        private List<string> FetchTitleFromDisplayFlow()
+        {
+            var titles = new List<string>();
+
+            foreach (var flow in Flows)
             {
-                Text = "stub"
-            };
+                var flowStartEvent = (NewMessageEvent) flow.StartEvent;
+
+                if (flowStartEvent == null) continue;
+
+                if (flowStartEvent.IsDisplay)
+                {
+                    titles.Add(flowStartEvent.Title);
+                }
+            }
+
+            return titles;
+        }
+
+        private static KeyboardButton[][] ConverTitleListToKeybordsButton(IReadOnlyList<string> titles)
+        {
+            var buttons = new KeyboardButton[titles.Count][];
+
+            for (var i = 0; i < titles.Count; i++)
+            {
+                buttons[i] = new[]
+                {
+                    new KeyboardButton(titles[i]),
+                };
+            }
+
+            return buttons;
         }
     }
 

@@ -61,7 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="BotRanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\BotModule\Bot.cs" />
     <Compile Include="src\BotModule\Flows\Conditions\Condition.cs" />
@@ -71,11 +71,11 @@
     <Compile Include="src\BotModule\Flows\Events\TimeEvent.cs" />
     <Compile Include="src\BotModule\Flows\Events\NewMessageEvent.cs" />
     <Compile Include="src\BotModule\Flows\FlowNode.cs" />
-    <Compile Include="src\BotModule\Flows\InnerChain.cs" />
+    <Compile Include="src\BotModule\Flows\Chain.cs" />
     <Compile Include="src\BotModule\Flows\Inputs\IInput.cs" />
-    <Compile Include="src\BotModule\Flows\Inputs\Input.cs" />
+    <Compile Include="src\BotModule\Flows\Inputs\SimpleInput.cs" />
     <Compile Include="src\BotModule\Flows\Responses\IResponse.cs" />
-    <Compile Include="src\BotModule\Flows\Responses\Response.cs" />
+    <Compile Include="src\BotModule\Flows\Responses\SimpleResponse.cs" />
     <Compile Include="src\Exceptions\BotNotFoundedException.cs" />
     <Compile Include="src\DataSource\BotSource.cs" />
     <Compile Include="src\DataSource\DataContext.cs" />

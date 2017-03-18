@@ -4,7 +4,14 @@ namespace BotCreators.BotModule.Flows
 {
     public class FlowNode
     {
-        public InnerChain Current;
-        public List<InnerChain> NextChains;
+        public FlowNode(Chain chain)
+        {
+            Current = chain;
+        }
+
+        public FlowNode() { }
+
+        public Chain Current;
+        public List<Chain> NextChains;
     }
 }

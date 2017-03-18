@@ -34,7 +34,22 @@ namespace BotCreators.DataSource
         {
             var flow = new Flow("how_are_you");
 
-            flow.Head = new FlowNode(new InnerChain());
+            var howAreYou = new Chain()
+            {
+                Id = "how_are_you",
+                StartEvent = new NewMessageEvent
+                {
+                    Input = new SimpleInput("Как дела?")
+                },
+                Responses = new List<IResponse>
+                {
+                    new SimpleResponse("Отлично")
+                }
+            };
+
+            (howAreYou.StartEvent as NewMessageEvent).IsDisplay = true;
+
+            flow.Head = new FlowNode(howAreYou);
 
             return flow;
         }
@@ -90,19 +105,19 @@ namespace BotCreators.DataSource
             var result = new Flow
             {
                 /*BotId = "flow_get_action",
-                InnerChains = new List<InnerChain>
+                InnerChains = new List<Chain>
                 {
-                    new InnerChain
+                    new Chain
                     {
                         StartEvent = new NewMessageEvent
                         {
-                            Input = new Input("Расскажи мне о акциях"),
+                            SimpleInput = new SimpleInput("Расскажи мне о акциях"),
                             GeneralStartInput = "Расскажи мне о акциях"
                         },
                         Action = new List<Action>(),
-                        Responses = new List<Response>
+                        Responses = new List<IResponse>
                         {
-                            new Response("actions")
+                            new IResponse("actions")
                         }
                     }
                 }*/
@@ -127,19 +142,19 @@ namespace BotCreators.DataSource
             var result = new Flow
             {
                 /*BotId = "flow_about_bot",
-                InnerChains = new List<InnerChain>
+                InnerChains = new List<Chain>
                 {
-                    new InnerChain
+                    new Chain
                     {
                         StartEvent = new NewMessageEvent
                         {
-                            Input = new Input("Расскажи мне о ботах"),
+                            SimpleInput = new SimpleInput("Расскажи мне о ботах"),
                             GeneralStartInput = "Расскажи мне о ботах"
                         },
                         Action = new List<Action>(),
-                        Responses = new List<Response>
+                        Responses = new List<IResponse>
                         {
-                            new Response("Они классные")
+                            new IResponse("Они классные")
                         }
                     }
                 }*/

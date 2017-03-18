@@ -1,4 +1,4 @@
-﻿namespace BotCreators.BotModule.Flows
+﻿namespace BotCreators.BotModule.Flows.Events
 {
     /*
          * Класс родитель для всех событий

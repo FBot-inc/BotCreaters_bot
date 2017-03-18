@@ -2,11 +2,11 @@
 
 namespace BotCreators.BotModule.Flows.Inputs
 {
-    public class Input : IInput
+    public class SimpleInput : IInput
     {
         public string Pattern { get; }
 
-        public Input(string pattern)
+        public SimpleInput(string pattern)
         {
             if (pattern == null)
             {
@@ -23,7 +23,7 @@ namespace BotCreators.BotModule.Flows.Inputs
 
         public override bool Equals(object obj)
         {
-            var input = obj as Input;
+            var input = obj as SimpleInput;
 
             return input != null && Equals(input);
         }
@@ -33,9 +33,9 @@ namespace BotCreators.BotModule.Flows.Inputs
             return Pattern?.GetHashCode() ?? 0;
         }
 
-        public bool Equals(Input input)
+        public bool Equals(SimpleInput simpleInput)
         {
-            return Pattern.Equals(input.Pattern);
+            return Pattern.Equals(simpleInput.Pattern);
         }
     }
 }

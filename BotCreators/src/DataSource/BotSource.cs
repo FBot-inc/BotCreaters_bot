@@ -37,8 +37,10 @@ namespace BotCreators.DataSource
         {
             var bot = new Bot("fbot");
 
-            bot.StartInputs.Add(new Input("/start"));
+            bot.StartInputs.Add(new SimpleInput("/start"));
             
+            bot.Flows.Add(FlowSource.GetFlowById("how_are_you"));
+
             return bot;
         }
     }

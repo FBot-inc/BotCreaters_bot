@@ -11,13 +11,13 @@ namespace BotCreators.BotModule.Flows
          * Данные цепочки реагируют только на одно событие и на этом их жизнь прекращается
          * В то время как поток может хранить несколько подряд идущих входных событий
          */
-    public class InnerChain
+    public class Chain
     {
         public string Id { get; set; }
         public Event StartEvent { get; set; }
 
-        public List<Action> Action { get; set; }
+        public List<Action> Action { get; set; } = new List<Action>();
 
-        public List<Response> Responses { get; set; }
+        public List<IResponse> Responses { get; set; } = new List<IResponse>();
     }
 }
