@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using BotCreators.BotModule.Flows.Conditions;
 
-namespace BotCreators.BotModule.Responses
+namespace BotCreators.BotModule.Flows.Responses
 {
     public class Response : IResponse
     {
         public string Text { get; }
+
+        public List<Condition> Conditions { get; set; }
 
         public Response(string text)
         {

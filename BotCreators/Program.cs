@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BotCreators.BotModule;
 using BotCreators.BotModule.Flows;
-using BotCreators.BotModule.Inputs;
-using BotCreators.BotModule.Responses;
+using BotCreators.DataSource;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -15,8 +14,8 @@ namespace BotCreators
         public static void Main(string[] args)
         {
             var api = new TelegramBotClient("350817703:AAHSOXYrfX_uWyz0qEWCkzng1YYNZu-mvR0");
-            
-            var bot = new Bot();
+
+            var bot = BotSource.GetBotById("fbot");
 
             var me = api.GetMeAsync();
 

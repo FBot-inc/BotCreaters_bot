@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using BotCreators.BotModule.Flows;
-using BotCreators.BotModule.Inputs;
+using BotCreators.BotModule.Flows.Events;
+using BotCreators.BotModule.Flows.Inputs;
 using BotCreators.DataSource;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -11,33 +12,21 @@ namespace BotCreators.BotModule
 {
     public class Bot
     {
-        public List<Flow> Flows { get; set; } = new List<Flow>();
+        public string BotId { get; private set; }
 
-
-        //вводы при которых показывается первый экран
-        public List<Input> StartInputs = new List<Input>
+        public List<Flow> Flows { get; } = new List<Flow>();
+        public List<Input> StartInputs { get; } = new List<Input>();
+        
+        public Bot(string botId)
         {
-            new Input("/start")
-        };
-
-        public Bot()
-        {
-            try
-            {
-                Flows.Add(FlowSource.GetFlowById("flow_about_bot"));
-                Flows.Add(FlowSource.GetFlowById("flow_get_action"));
-            }
-            catch (TypeInitializationException e)
-            {
-                Console.WriteLine(e.InnerException);
-            }
+            BotId = botId;
         }
 
         public TelegramResponse Conversation(string message, long chatId)
         {
             if (StartInputs.Any(p => p.IsBelong(message)))
             {
-                var buttonsList = Flows.Select(flow => flow.StartEvent()).OfType<NewMessageEvent>().Select(startEvent => startEvent.GeneralStartInput).ToList();
+                var buttonsList = Flows.Select(flow => flow.StartEvent).OfType<NewMessageEvent>().Select(startEvent => startEvent.Title).ToList();
 
                 var keybordButtons = new KeyboardButton[buttonsList.Count][];
 

@@ -1,4 +1,4 @@
-﻿namespace BotCreators.BotModule.Inputs
+﻿namespace BotCreators.BotModule.Flows.Inputs
 {
     public interface IInput
     {

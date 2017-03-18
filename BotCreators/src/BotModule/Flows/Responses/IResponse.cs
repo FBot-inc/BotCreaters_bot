@@ -1,4 +1,4 @@
-﻿namespace BotCreators.BotModule.Responses
+﻿namespace BotCreators.BotModule.Flows.Responses
 {
     public interface IResponse
     {

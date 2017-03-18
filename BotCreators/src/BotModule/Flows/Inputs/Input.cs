@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BotCreators.BotModule.Inputs
+namespace BotCreators.BotModule.Flows.Inputs
 {
     public class Input : IInput
     {

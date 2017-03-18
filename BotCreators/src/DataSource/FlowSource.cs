@@ -2,39 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using BotCreators.BotModule.Flows;
-using BotCreators.BotModule.Inputs;
-using BotCreators.BotModule.Responses;
+using BotCreators.BotModule.Flows.Events;
+using BotCreators.BotModule.Flows.Inputs;
+using BotCreators.BotModule.Flows.Responses;
 
 namespace BotCreators.DataSource
 {
+
+    /*
+     * На данный момент здесь будут создавать тестовые потоки сообщений.
+     * В дальнешйенм данный класс будет отвечать за загрузку потоков из базы данных или другого формата хранения.
+     */
+
     public class FlowSource
     {
-        public static List<Flow> Flows = CreateFlows();
+        private static readonly List<Flow> Flows = new List<Flow>();
 
-        private static List<Flow> CreateFlows()
+        static FlowSource()
         {
-            var result = new List<Flow>
-            {
-                CreateFlowAboutBot(),
-                //CreateFlowGetConsultation(),
-                CreateFlowGetAction(),
-                //CreateFlowSubscribeAction(),
-                //CreateFlowDeliveryNewActionByAdd(),
-                //CreateFlowDeliveryNewActionByTime(),
-                //CreateFlowGetAdminRight(),
-                //CreateFlowAddAction()
-            };
-
-
-            return result;
+            Flows.Add(
+                item: CreateFlowHowAreYou()
+                );
         }
-
-
-        //todo возможно необходимо будет каждый раз создавать разные
+        
         public static Flow GetFlowById(string id)
         {
             return Flows.FirstOrDefault(p => p.Id.Equals(id));
         }
+
+        private static Flow CreateFlowHowAreYou()
+        {
+            var flow = new Flow("how_are_you");
+
+            flow.Head = new FlowNode(new InnerChain());
+
+            return flow;
+        }
+
+
+        
 
         /*
          * Отправляет пользователю акцию в заданное время.
@@ -83,7 +89,7 @@ namespace BotCreators.DataSource
         {
             var result = new Flow
             {
-                Id = "flow_get_action",
+                /*BotId = "flow_get_action",
                 InnerChains = new List<InnerChain>
                 {
                     new InnerChain
@@ -99,7 +105,7 @@ namespace BotCreators.DataSource
                             new Response("actions")
                         }
                     }
-                }
+                }*/
             };
 
             return result;
@@ -120,7 +126,7 @@ namespace BotCreators.DataSource
         {
             var result = new Flow
             {
-                Id = "flow_about_bot",
+                /*BotId = "flow_about_bot",
                 InnerChains = new List<InnerChain>
                 {
                     new InnerChain
@@ -136,7 +142,7 @@ namespace BotCreators.DataSource
                             new Response("Они классные")
                         }
                     }
-                }
+                }*/
             };
 
 

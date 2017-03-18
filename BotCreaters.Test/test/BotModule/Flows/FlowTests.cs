@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using BotCreators.BotModule.Flows;
-using BotCreators.BotModule.Inputs;
-using BotCreators.BotModule.Responses;
+using BotCreators.BotModule.Flows.Events;
+using BotCreators.BotModule.Flows.Inputs;
+using NUnit.Framework.Internal;
 using NUnit.Framework;
 
 namespace BotCreaters.Test.test.BotModule.Flows
@@ -10,67 +15,24 @@ namespace BotCreaters.Test.test.BotModule.Flows
     public class FlowTests
     {
         [Test]
-        public void CreateFlowWithNullArgument()
+        public void CreateFlowWithId()
         {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var flow = new Flow(null);
-            });
+            const string id = "how_are_you";
+            var flow = new Flow(id);
+
+            var resultId = flow.Id;
+
+            Assert.AreEqual(id, flow.Id);
         }
 
         [Test]
-        public void CreateFlowWithRightDataAndCheckHeadElement()
+        public void CreateFlowWithoutId()
         {
-            var input = new Input("hello");
-            var flow = new Flow(input);
+            var flow = new Flow();
 
-            Assert.AreEqual(input, flow.Head.Input);
-        }
+            var result = flow.Id;
 
-        [Test]
-        public void CreateFlowWithOneResponse()
-        {
-            var input = new Input("hello");
-            var flow = new Flow(input);
-
-            var response = new Response("hi");
-
-            flow.Head.AddResponse(response);
-
-            Assert.AreEqual(response, flow.Head.Response);
-        }
-
-        [Test]
-        public void TestTextOfConversationOnExampleOfShortDialog()
-        {
-            var input = new Input("hello");
-            var flow = new Flow(input);
-            var response = new Response("hi");
-
-            flow.Head.AddResponse(response);
-
-            var responseOfConversation = flow.Conversation("hello", 1234L);
-            
-            Assert.AreEqual("hi", responseOfConversation.Text); 
-        }
-
-        [Test]
-        public void CreateResponseWithHelpStartAndAddResponseMetods()
-        {
-            var input = new Input("hi");
-            var flow = new Flow(input);
-
-            var response = new Response("Hello");
-
-            flow.Start()
-                .AddResponse(response)
-                .End();
-
-            Assert.Multiple(() =>
-            {
-                Assert.AreEqual(response, flow.Head.Response);
-                Assert.IsTrue(flow.Head.NextNode.IsEnd);
-            });
+            Assert.AreNotEqual(result, null);
         }
     }
 }
