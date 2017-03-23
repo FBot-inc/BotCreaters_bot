@@ -37,17 +37,8 @@ namespace BotCreators.DataSource
             var howAreYou = new Chain()
             {
                 Id = "how_are_you",
-                StartEvent = new NewMessageEvent
-                {
-                    Input = new SimpleInput("Как дела?")
-                },
-                Responses = new List<IResponse>
-                {
-                    new SimpleResponse("Отлично")
-                }
+                Input = new SimpleInput("Как дела?")
             };
-
-            (howAreYou.StartEvent as NewMessageEvent).IsDisplay = true;
 
             flow.Head = new FlowNode(howAreYou);
 

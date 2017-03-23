@@ -6,12 +6,12 @@ namespace BotCreators.BotModule.Flows
     {
         public FlowNode(Chain chain)
         {
-            Current = chain;
+            Chain = chain;
         }
 
         public FlowNode() { }
 
-        public Chain Current;
+        public Chain Chain;
         public List<Chain> NextChains;
     }
 }

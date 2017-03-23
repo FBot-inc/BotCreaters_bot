@@ -16,10 +16,17 @@ namespace BotCreators.BotModule.Flows.Inputs
             Pattern = pattern;
         }
 
+
+        public string GetTitle()
+        {
+            return Pattern;
+        }
+
         public bool IsBelong(string message)
         {
             return Pattern != null && Pattern.Equals(message);
         }
+
 
         public override bool Equals(object obj)
         {

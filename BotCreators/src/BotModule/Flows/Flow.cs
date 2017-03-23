@@ -13,12 +13,10 @@ namespace BotCreators.BotModule.Flows
     public class Flow
     {
         public string Id { get; private set; }
-        public Event StartEvent => Head?.Current?.StartEvent;
+        public string Title => Head?.Chain?.GetTitle();
 
         public FlowNode Head { get; set; }
-
-        public List<FlowNode> Nodes { get; } = new List<FlowNode>();
-
+        
         public Flow(string id)
         {
             Id = id;

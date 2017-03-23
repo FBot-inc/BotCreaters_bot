@@ -39,7 +39,7 @@ namespace BotCreators.DataSource
 
             bot.StartInputs.Add(new SimpleInput("/start"));
             
-            bot.Flows.Add(FlowSource.GetFlowById("how_are_you"));
+            bot.AddFlow(FlowSource.GetFlowById("how_are_you"));
 
             return bot;
         }

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using BotCreators.BotModule;
-using BotCreators.BotModule.Flows;
-using BotCreators.DataSource;
-using BotCreators.Exceptions;
 using Telegram.Bot;
+using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -14,108 +10,204 @@ namespace BotCreators
 {
     public class BotRanner
     {
-        private Bot _bot;
-        private TelegramBotClient _api;
-        private readonly string _token;
-
         public static void Main(string[] args)
         {
-            new BotRanner("350817703:AAHSOXYrfX_uWyz0qEWCkzng1YYNZu-mvR0").Start();
-        }
+            var telegramClient = new TelegramBotClient("350817703:AAHSOXYrfX_uWyz0qEWCkzng1YYNZu-mvR0");
 
-        public BotRanner(string token)
-        {
-            _token = token;
-        }
+            var messageTree = new MessageTree(
+                new UserInput {Pattern = "/start"},
+                new List<Response>
+                {
+                    new Response {Text = "Привет. Я чат-бот и я могу расказать тебе зачем нужны чат-боты."},
+                    new Response
+                    {
+                        Text = "Хочешь узнать?",
+                        ReplyMarkup = new ReplyKeyboardMarkup(new[]
+                        {
+                            new[]
+                            {
+                                new KeyboardButton("Да"),
+                                new KeyboardButton("Нет")
+                            }
+                        }, true, true)
+                    }
+                });
 
-        public void Start()
-        {
-            Run();
-        }
 
-        public void Run()
-        {
-            var me = InitTelegramClient();
-
-            ShowMeInformation(me);
-
-            const string botId = "fbot";
-
-            try
+            var areYouSure = new MessageTreeNode
             {
-                _bot = BotSource.GetBotById(botId);
-            }
-            catch (BotNotFoundedException e)
+                Current = new InputResponsePair
+                {
+                    Input = new UserInput
+                    {
+                        Pattern = "Да"
+                    },
+                    Responses = new List<Response>
+                    {
+                        new Response
+                        {
+                            Text = "Ты уверен?",
+                            ReplyMarkup = new ReplyKeyboardMarkup(new[]
+                            {
+                                new[]
+                                {
+                                    new KeyboardButton("Да"),
+                                    new KeyboardButton("Нет")
+                                }
+                            }, true, true)
+                        }
+                    }
+                }
+            };
+
+
+            var botHaveBadNews = new MessageTreeNode
             {
-                Console.WriteLine("Can't find bot with ID fbot");
-                Console.WriteLine(e);
-                throw;
-            }
+                Current = new InputResponsePair
+                {
+                    Input = new UserInput
+                    {
+                        Pattern = "Нет"
+                    },
+                    Responses = new List<Response>
+                    {
+                        new Response
+                        {
+                            Text = "Тогда у меня для тебя плохие новости..."
+                        }
+                    }
+                }
+            };
 
 
-            var offset = 0;
+            messageTree.Head.NextNodes.Add(botHaveBadNews);
+            messageTree.Head.NextNodes.Add(areYouSure);
+
+            messageTree.Head.NextNodes.FirstOrDefault(p => p.Current.Input.Compare("Да"))?.NextNodes.Add(botHaveBadNews);
+
+            var offset = -1;
 
             while (true)
             {
-                var updates = _api.GetUpdatesAsync(offset, 100, 100);
+                var updateTask = telegramClient.GetUpdatesAsync(offset, 100, 100);
 
-                if (updates.Result.Any())
+                //todo Добавить обработку исключения при неудачном получение обновлений
+
+                if (updateTask.Result.Any())
                 {
-                    offset = updates.Result.Max(p => p.Id) + 1;
+                    offset = updateTask.Result.Max(p => p.Id) + 1;
                 }
 
-                ProcessUpdates(updates);
+                foreach (var update in updateTask.Result)
+                {
+                    var responses = messageTree.GetResponse(update.Message.Text, update.Message.Chat.Id);
+
+                    foreach (var response in responses)
+                    {
+                        telegramClient.SendTextMessageAsync(update.Message.Chat.Id, response.Text, false, false, 0,
+                            response.ReplyMarkup);
+                    }
+                }
             }
         }
+    }
 
-        private Task<User> InitTelegramClient()
-        {
-            _api = new TelegramBotClient(_token);
-            return _api.GetMeAsync();
-        }
 
-        private void ShowMeInformation(Task<User> user)
-        {
-            Console.WriteLine("Complited the connection to the telegram bot");
-            Console.WriteLine("Bot's id: " + user.Result.Id);
-            Console.WriteLine("Bot's firstname: " + user.Result.FirstName);
-            Console.WriteLine("Bot's username: " + user.Result.Username);
-            Console.WriteLine();
-        }
+    public class MessageTree
+    {
+        public MessageTreeNode Head { get; }
 
-        private void ProcessUpdates(Task<Update[]> updates)
+        public Response StubResponse = new Response
         {
-            foreach (var update in updates.Result)
+            Text = "Я не знаю, что ответить тебе."
+        };
+
+        private readonly Dictionary<long, List<MessageTreeNode>> _currentNodes =
+            new Dictionary<long, List<MessageTreeNode>>();
+
+        public MessageTree(UserInput headInput, List<Response> headResponses)
+        {
+            if (headInput == null || headResponses == null || !headResponses.Any())
             {
-                Console.WriteLine("There is a new message from " + update.Message.Chat.Id + " chat: " +
-                                  update.Message.Text);
-
-                var response = _bot.Conversation(update.Message.Text, update.Message.Chat.Id);
-
-                SendResponse(response, update);
-            }
-        }
-
-        private void SendResponse(TelegramResponse response, Update update)
-        {
-            if (!response.KeyboardButtons.Any())
-            {
-                _api.SendTextMessageAsync(update.Message.Chat.Id, response?.Text);
-                return;
+                throw new ArgumentNullException();
             }
 
-            if (response == null || update == null)
+            Head = new MessageTreeNode
             {
-                throw new ArgumentNullException($"Response or update can't be null");
-            }
-
-            var keybord = new ReplyKeyboardMarkup(response.KeyboardButtons)
-            {
-                ResizeKeyboard = true,
-                OneTimeKeyboard = true
+                Current = new InputResponsePair
+                {
+                    Input = headInput,
+                    Responses = headResponses
+                }
             };
-
-            _api.SendTextMessageAsync(update.Message.Chat.Id, response?.Text, false, false, 0, keybord);
         }
+
+        public List<Response> GetResponse(string message, long chatId)
+        {
+            if (!_currentNodes.ContainsKey(chatId))
+            {
+                if (!Head.Current.Input.Compare(message))
+                {
+                    return new List<Response> {StubResponse};
+                }
+
+                if (Head.NextNodes.Any())
+                {
+                    _currentNodes.Add(chatId, Head.NextNodes);
+                }
+
+                return Head.Current.Responses;
+            }
+
+            var suitableResponse = _currentNodes[chatId].FirstOrDefault(p => p.Current.Input.Compare(message));
+
+            if (suitableResponse == null)
+            {
+                return new List<Response> {StubResponse};
+            }
+
+            if (!suitableResponse.NextNodes.Any())
+            {
+                _currentNodes.Remove(chatId);
+            }
+            else
+            {
+                _currentNodes[chatId] = suitableResponse.NextNodes;
+            }
+
+            return suitableResponse.Current.Responses;
+        }
+    }
+
+    public class MessageTreeNode
+    {
+        public InputResponsePair Current { get; set; }
+        public List<MessageTreeNode> NextNodes { get; } = new List<MessageTreeNode>();
+    }
+
+    public class InputResponsePair
+    {
+        public UserInput Input { get; set; }
+        public List<Response> Responses { get; set; } = new List<Response>();
+    }
+
+    public class UserInput
+    {
+        public string Pattern { get; set; } = "";
+
+        public UserInput()
+        {
+        }
+
+        public bool Compare(string message)
+        {
+            return Pattern.Equals(message);
+        }
+    }
+
+    public class Response
+    {
+        public string Text { get; set; } = "";
+        public IReplyMarkup ReplyMarkup { get; set; }
     }
 }

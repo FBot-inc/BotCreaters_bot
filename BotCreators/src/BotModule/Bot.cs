@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BotCreators.BotModule.Flows;
 using BotCreators.BotModule.Flows.Events;
@@ -11,50 +12,58 @@ namespace BotCreators.BotModule
     {
         public string BotId { get; private set; }
 
+        //todo Удалить flows, заменив предварительно на FlowManager
         public List<Flow> Flows { get; } = new List<Flow>();
+
+        private FlowManager _flowManager;
+
         public List<SimpleInput> StartInputs { get; } = new List<SimpleInput>();
+        public string StartResponse { get; set; }
 
         public Bot(string botId)
         {
             BotId = botId;
+            _flowManager = new FlowManager(this);
         }
 
         public TelegramResponse Conversation(string message, long chatId)
         {
-            var response = new TelegramResponse();
-
-            if (IsStartMessage(message))
+            if (message == null)
             {
-                var flowTitles = FetchTitleFromDisplayFlow();
-
-                response.KeyboardButtons = ConverTitleListToKeybordsButton(flowTitles);
+                throw new ArgumentNullException();
             }
 
-            return response;
-        }
-
-        private bool IsStartMessage(string message)
-        {
-            return StartInputs.Any(p => p.IsBelong(message));
-        }
-
-        private List<string> FetchTitleFromDisplayFlow()
-        {
-            var titles = new List<string>();
-
-            foreach (var flow in Flows)
+            if (StartInputs.Any(p => p.IsBelong(message)))
             {
-                var flowStartEvent = (NewMessageEvent) flow.StartEvent;
+                var response = new TelegramResponse();
 
-                if (flowStartEvent == null) continue;
-
-                if (flowStartEvent.IsDisplay)
+                if (StartResponse != null)
                 {
-                    titles.Add(flowStartEvent.Title);
+                    response.Text = StartResponse;
                 }
-            }
 
-            return titles;
+                var titles = _flowManager.GetTitles();
+
+                if (titles.Any())
+                {
+                    response.KeyboardButtons = ConverTitleListToKeybordsButton(titles);
+                }
+
+                return response;
+            }
+            
+            //todo Реализовать логику получения ответа, если сообщение не является стартовым.
+            return null;
+        }
+
+        public void AddFlow(Flow flow)
+        {
+            _flowManager.AddFlow(flow);
+        }
+
+        public IReadOnlyCollection<Flow> GetFlows()
+        {
+            return _flowManager.GetFlows();
         }
 
         private static KeyboardButton[][] ConverTitleListToKeybordsButton(IReadOnlyList<string> titles)
@@ -75,7 +84,7 @@ namespace BotCreators.BotModule
 
     public class TelegramResponse
     {
-        public string Text { get; set; }
+        public string Text { get; set; } = "";
         public KeyboardButton[][] KeyboardButtons { get; set; } = new KeyboardButton[0][];
     }
 }

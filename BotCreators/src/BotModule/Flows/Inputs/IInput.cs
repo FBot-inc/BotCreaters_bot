@@ -2,6 +2,8 @@
 {
     public interface IInput
     {
+        string GetTitle();
+
         bool IsBelong(string message);
     }
 }
