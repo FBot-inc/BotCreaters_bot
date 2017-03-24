@@ -63,11 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="test\BotModule\BotTests.cs" />
-    <Compile Include="test\BotModule\Flows\FlowManagerTests.cs" />
-    <Compile Include="test\BotModule\Flows\FlowTests.cs" />
-    <Compile Include="test\DataSource\Bots\FBotTests.cs" />
-    <Compile Include="test\DataSource\Flows\HowAreYouFlowTests.cs" />
+    <Compile Include="test\InputResponsePairTests.cs" />
+    <Compile Include="test\ResponsesTests.cs" />
+    <Compile Include="test\UserInputTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
